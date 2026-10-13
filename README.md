@@ -44,14 +44,14 @@ The GLB carries named transform nodes (`DOF_zoom__r`, `DOF_focus__r`, `DOF_g1__t
 
 Zoom couples two lens groups to 6 mm and 10 mm travel. Focus drives the third group through −5 mm travel. Nine blade pivots rotate through 65°. The exploded view moves top-level assemblies along the optical axis, preserving the iris’s internal layout. Existing embedded animation clips are not played concurrently with the procedural rig.
 
-| File | Responsibility |
-| --- | --- |
-| `src/rig.js` | Asset contract, rest transforms, articulation, exploded view, material modes |
-| `src/state.js` | Validated state, share-link serialization, presets, illustrative metrics |
-| `src/main.js` | Three.js scene, interaction, selection, loading, exports, animation |
-| `src/style.css` | Responsive visual system and accessible focus states |
-| `public/models/camera.glb` | Original hybrid camera asset |
-| `tests/` | URL bounds, metrics, actual asset hierarchy and browser behavior |
+| File                       | Responsibility                                                               |
+| -------------------------- | ---------------------------------------------------------------------------- |
+| `src/rig.js`               | Asset contract, rest transforms, articulation, exploded view, material modes |
+| `src/state.js`             | Validated state, share-link serialization, presets, illustrative metrics     |
+| `src/main.js`              | Three.js scene, interaction, selection, loading, exports, animation          |
+| `src/style.css`            | Responsive visual system and accessible focus states                         |
+| `public/models/camera.glb` | Original hybrid camera asset                                                 |
+| `tests/`                   | URL bounds, metrics, actual asset hierarchy and browser behavior             |
 
 **Stack:** Three.js, JavaScript ES modules, HTML/CSS, Vite, Node test runner and Playwright. Static deployment; no database, authentication, paid service or runtime AI API.
 
