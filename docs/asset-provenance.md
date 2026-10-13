@@ -8,3 +8,7 @@
 - Original prototype: already supported zoom, focus, iris and dial controls. The new web edition adds the anatomy workflow, clickable selection, exploded inspection, state sharing, responsive interface, screenshots and tests. Do not describe those earlier mechanical controls as first invented in this edition.
 
 The author’s precise upstream Tripo subscription terms and source-image rights have not been independently audited; public-release permission was supplied by the project owner. No broader ownership or exclusivity claim is made.
+
+## Motion Studio procedural examples
+
+`src/assets.js` creates the city bicycle and parallel gripper from Three.js geometry primitives. These are newly authored demonstration assets for this edition, with source under the application’s MIT license. They do not use the owner’s old work-folder bicycle file and are not represented as Tripo outputs.

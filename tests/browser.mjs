@@ -1,7 +1,10 @@
 import { chromium } from "@playwright/test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
-const url = process.env.TEST_URL || "http://127.0.0.1:4318/";
+const url = new URL(
+  "camera.html",
+  process.env.TEST_URL || "http://127.0.0.1:4318/",
+).href;
 const browser = await chromium.launch({
   executablePath:
     process.env.CHROME_PATH ||

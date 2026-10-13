@@ -3,275 +3,262 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <meta name="theme-color" content="#f4f2ed" />
     <meta
       name="description"
-      content="An interactive camera anatomy lab. Explore a hybrid AI-generated 3D camera through articulated controls, transparent shells and exploded views."
+      content="Explore, articulate and save interactive 3D assets in your browser."
     />
-    <title>IRIS — Camera Lab</title>
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23e96935'/%3E%3Ccircle cx='20' cy='20' r='11' fill='none' stroke='white' stroke-width='3'/%3E%3Ccircle cx='20' cy='20' r='4' fill='white'/%3E%3C/svg%3E"
-    />
+    <title>IRIS — Motion Studio</title>
   </head>
   <body>
-    <header class="topbar">
-      <a class="brand" href="./" aria-label="IRIS Camera Lab home"
-        ><span class="brand-mark">◉</span><strong>IRIS</strong
-        ><span class="brand-divider"></span><span>CAMERA LAB</span></a
-      >
+    <header>
+      <a class="brand" href="./"><b>◉ IRIS</b><span>MOTION STUDIO</span></a>
       <nav>
-        <a href="#about" id="about-link">The project ↗</a
+        <a href="camera.html">Camera deep dive ↗</a
         ><a
           href="https://github.com/yilan-zhang/iris-camera-lab"
           target="_blank"
           rel="noopener"
           >GitHub ↗</a
-        ><button id="share" class="button small">
-          Share setup <span>↗</span>
-        </button>
+        ><button id="import-top" class="dark">＋ Import GLB</button>
       </nav>
     </header>
     <main>
       <section class="intro">
         <div>
-          <div class="eyebrow">
-            <span class="live-dot"></span> INTERACTIVE OBJECT STUDY / 001
-          </div>
-          <h1>Beauty on the outside.<br /><em>Curiosity on the inside.</em></h1>
+          <span class="eyebrow">AN INTERACTIVE 3D WORKBENCH</span>
+          <h1>Give objects <em>a little life.</em></h1>
+          <p>Explore an assembly. Define a movement. Make it yours.</p>
         </div>
-        <p>
-          A camera you can take apart.<br />Turn the rings. Open the iris.<br />See
-          what makes the image possible.
-        </p>
-      </section>
-      <section class="lab" aria-label="Interactive camera lab">
-        <aside class="parts-panel">
-          <div class="panel-kicker">01 / ANATOMY</div>
-          <h2>Meet the mechanism.</h2>
-          <p class="muted">Select a component to explore.</p>
-          <div id="parts" class="parts">
-            <button data-part="body" class="part active">
-              <span>01</span>
-              <div>Camera body<small>Form & structure</small></div>
-              <b>↗</b>
-            </button>
-            <button data-part="zoom" class="part">
-              <span>02</span>
-              <div>Zoom ring<small>Change the frame</small></div>
-              <b>↗</b>
-            </button>
-            <button data-part="focus" class="part">
-              <span>03</span>
-              <div>Focus ring<small>Move the focal group</small></div>
-              <b>↗</b>
-            </button>
-            <button data-part="iris" class="part">
-              <span>04</span>
-              <div>Nine-blade iris<small>Shape the opening</small></div>
-              <b>↗</b>
-            </button>
-            <button data-part="glass" class="part">
-              <span>05</span>
-              <div>Lens groups<small>Look beneath the shell</small></div>
-              <b>↗</b>
-            </button>
-          </div>
-          <div class="part-note">
-            <span class="tiny">IN FOCUS</span>
-            <h3 id="part-title">An idea, made tangible.</h3>
-            <p id="part-description">
-              An AI-generated exterior meets an articulated mechanical core.
-              Explore how appearance and movement come together.
-            </p>
-            <div id="part-spec" class="spec">HYBRID 3D ASSET · PINK / GOLD</div>
-          </div>
-          <a class="asset-link" href="./models/camera.glb" download
-            >Download 3D model <span>↓ GLB · 14.6 MB</span></a
+        <div class="privacy">
+          <i></i> Your models stay in your browser.<br /><span
+            >No account. No upload. Just exploration.</span
           >
+        </div>
+      </section>
+      <section class="library" aria-label="Asset library">
+        <div id="asset-cards"></div>
+        <button id="import-card" class="import-card">
+          <span>＋</span><strong>Your own object</strong
+          ><small>Import a self-contained .glb · up to 40 MB</small>
+        </button>
+      </section>
+      <section class="workspace">
+        <aside class="hierarchy">
+          <div class="eyebrow">01 / STRUCTURE</div>
+          <h2>Inside the object</h2>
+          <label class="search-label" for="search">Find a part</label
+          ><input
+            id="search"
+            placeholder="Search named parts…"
+            autocomplete="off"
+          />
+          <div id="tree" role="group" aria-label="Scene parts"></div>
+          <div class="selection-note">
+            Select a named part or click directly on the model. A group moves
+            its children together.
+          </div>
         </aside>
-        <div class="stage" id="stage">
-          <div class="stage-top">
-            <span class="object-label">IRIS / PINK & GOLD EDITION</span
-            ><span class="status"
-              ><i></i><span id="model-status">LOADING MODEL</span></span
-            >
+        <div class="stage">
+          <div class="stage-header">
+            <div>
+              <span class="eyebrow" id="asset-type">HYBRID AI ASSET</span>
+              <h2 id="asset-name">Pink & gold camera</h2>
+            </div>
+            <span id="status" role="status">Loading…</span>
           </div>
           <div
             id="viewport"
             tabindex="0"
-            aria-label="3D camera. Drag to orbit, scroll to zoom. Use view buttons for keyboard navigation."
+            aria-label="3D workbench. Drag to orbit. Scroll to zoom."
           ></div>
-          <div id="loading" role="status">
-            <div class="loader-orbit"></div>
-            <strong>Assembling your camera</strong
-            ><span id="load-progress">Loading the original 3D asset…</span>
+          <div id="loading" role="status">Loading your object…</div>
+          <div class="stage-tools">
+            <div class="segmented">
+              <button data-mode="solid" class="active">Solid</button
+              ><button data-mode="xray">X-ray</button
+              ><button data-mode="wire">Wireframe</button>
+            </div>
+            <button id="fit">Fit view ↗</button
+            ><button id="snapshot">Save image ↓</button>
           </div>
-          <div class="view-buttons" aria-label="Camera views">
-            <button data-view="hero" class="selected">Perspective</button
-            ><button data-view="front">Front</button
-            ><button data-view="side">Side</button
-            ><button data-view="rear">Back</button>
-          </div>
-          <div class="stage-bottom">
-            <span
-              >↔ Drag to orbit <span class="dot-sep">·</span> Scroll to
-              explore</span
-            ><button
-              id="snapshot"
-              title="Download a PNG of this view"
-              aria-label="Download view as PNG"
-            >
-              ↙ Save image
-            </button>
+          <div class="stage-foot">
+            <span>DRAG TO ORBIT · SCROLL TO ZOOM</span
+            ><span id="node-count"></span>
           </div>
         </div>
-        <aside class="control-panel">
-          <div class="panel-kicker">02 / EXPERIMENT</div>
-          <div class="panel-title">
-            <h2>Make it move.</h2>
-            <button id="reset" class="text-button">Reset ↺</button>
-          </div>
-          <div class="presets" aria-label="Lens presets">
-            <button data-preset="wide">Wide</button
-            ><button data-preset="portrait">Portrait</button
-            ><button data-preset="detail">Detail</button>
-          </div>
-          <div class="control">
-            <label for="zoom"
-              >Focal length
-              <output id="zoom-value">24<span>mm</span></output></label
-            ><input
-              id="zoom"
-              type="range"
-              min="0"
-              max="1"
-              step="0.001"
-              value="0"
-            />
-            <div class="range-label">
-              <span>24 mm / wide</span><span>70 mm / tight</span>
-            </div>
-          </div>
-          <div class="control">
-            <label for="focus"
-              >Focus travel
-              <output id="focus-value">0<span>%</span></output></label
-            ><input
-              id="focus"
-              type="range"
-              min="0"
-              max="1"
-              step="0.001"
-              value="0"
-            />
-            <div class="range-label">
-              <span>Rest position</span><span>Full travel</span>
-            </div>
-          </div>
-          <div class="control">
-            <label for="aperture"
-              >Aperture <output id="aperture-value">ƒ/2.8</output></label
-            ><input
-              id="aperture"
-              type="range"
-              min="0"
-              max="1"
-              step="0.001"
-              value="0"
-            />
-            <div class="range-label">
-              <span>Open iris</span><span>Close iris</span>
-            </div>
-          </div>
-          <div class="control compact">
-            <label for="explode"
-              >Exploded view
-              <output id="explode-value">0<span>%</span></output></label
-            ><input
-              id="explode"
-              type="range"
-              min="0"
-              max="1"
-              step="0.001"
-              value="0"
-            />
-          </div>
-          <div class="segmented" aria-label="Rendering mode">
-            <button data-mode="solid" class="selected">Solid</button
-            ><button data-mode="xray">X-ray</button
-            ><button data-mode="wire">Wireframe</button>
-          </div>
-          <button id="tour" class="tour-button">
-            ▷ <span>Play the mechanism</span>
-          </button>
-          <p class="control-footnote">
-            A mechanical illustration, not an optical simulator.
+        <aside class="inspector">
+          <div class="eyebrow">02 / DEFINE MOTION</div>
+          <h2 id="selected-name">Choose a part</h2>
+          <p id="selection-help">
+            Pick a component on the left to add or edit its motion.
           </p>
+          <form id="motion-form">
+            <fieldset id="editor" disabled>
+              <label
+                >Motion name<input
+                  id="motion-name"
+                  maxlength="80"
+                  required
+                  placeholder="e.g. Open the hinge"
+              /></label>
+              <div class="pair">
+                <label
+                  >Movement<select id="motion-type">
+                    <option value="rotate">Rotation</option>
+                    <option value="slide">Translation</option>
+                  </select></label
+                ><label
+                  >Local axis<select id="motion-axis">
+                    <option>x</option>
+                    <option>y</option>
+                    <option>z</option>
+                  </select></label
+                >
+              </div>
+              <div class="pair">
+                <label
+                  >From <span class="unit">(degrees)</span
+                  ><input
+                    id="motion-min"
+                    type="number"
+                    value="0"
+                    min="-10000"
+                    max="10000"
+                    step="any"
+                    required /></label
+                ><label
+                  >To <span class="unit">(degrees)</span
+                  ><input
+                    id="motion-max"
+                    type="number"
+                    value="90"
+                    min="-10000"
+                    max="10000"
+                    step="any"
+                    required
+                /></label>
+              </div>
+              <label>Pivot offset · local model units</label>
+              <div class="triple">
+                <label
+                  >X<input
+                    id="pivot-x"
+                    type="number"
+                    value="0"
+                    min="-10000"
+                    max="10000"
+                    step="any"
+                    required /></label
+                ><label
+                  >Y<input
+                    id="pivot-y"
+                    type="number"
+                    value="0"
+                    min="-10000"
+                    max="10000"
+                    step="any"
+                    required /></label
+                ><label
+                  >Z<input
+                    id="pivot-z"
+                    type="number"
+                    value="0"
+                    min="-10000"
+                    max="10000"
+                    step="any"
+                    required
+                /></label>
+              </div>
+              <p class="form-note">
+                Colored guides show local X (red), Y (green), Z (blue). Rotation
+                uses this local pivot. Translation uses the selected local axis;
+                offsets are in the original model’s units.
+              </p>
+              <button type="submit" class="dark full">Apply motion</button
+              ><button
+                type="button"
+                id="remove-motion"
+                class="subtle full"
+                hidden
+              >
+                Remove motion
+              </button>
+            </fieldset>
+          </form>
+          <div id="form-error" role="alert"></div>
+          <div class="inspector-bottom">
+            <span class="eyebrow">TRY THIS</span>
+            <p id="asset-tip">
+              Select a ring or lens group, then use its motion slider below.
+            </p>
+          </div>
         </aside>
       </section>
-      <section class="insights">
-        <div class="insight-lead">
-          <span class="panel-kicker">03 / UNDER THE SURFACE</span>
-          <h2>Small movements.<br />Different possibilities.</h2>
-        </div>
-        <div class="metric">
-          <span class="tiny">HORIZONTAL FIELD OF VIEW</span
-          ><strong id="fov">73.7<span>°</span></strong>
-          <p>Idealized 36 mm-wide sensor</p>
-          <svg id="fov-diagram" viewBox="0 0 150 36" aria-hidden="true">
-            <path id="fov-cone" d="M10 18 L135 1 L135 35 Z" />
-            <path d="M10 2V34" class="sensor-line" />
-          </svg>
-        </div>
-        <div class="metric">
-          <span class="tiny">RELATIVE LIGHT</span
-          ><strong id="light">100<span>%</span></strong>
-          <p>At the same shutter speed & ISO</p>
-          <div class="light-track"><i id="light-bar"></i></div>
-        </div>
-        <div class="metric last">
-          <span class="tiny">YOUR EXPLORATION</span
-          ><strong id="explored">0<span>/ 5</span></strong>
-          <p>Components inspected</p>
-          <div id="explore-dots" class="explore-dots">
-            <i></i><i></i><i></i><i></i><i></i>
+      <section class="motion-tray">
+        <div class="tray-heading">
+          <div>
+            <span class="eyebrow">03 / TEST & PLAY</span>
+            <h2>Your motion controls <span id="motion-count"></span></h2>
+          </div>
+          <div>
+            <button id="reset">Reset pose ↺</button
+            ><button id="play" class="dark">▷ Play all</button>
           </div>
         </div>
+        <div id="motion-controls"></div>
+        <p id="empty-motion" hidden>
+          No motions yet. Select a part, choose an axis, then apply your first
+          movement.
+        </p>
       </section>
-      <section id="about" class="about">
+      <section class="project-bar">
         <div>
-          <span class="panel-kicker">THE PROJECT</span>
-          <h2>From generated shape<br />to something you can explore.</h2>
-        </div>
-        <div>
+          <span class="eyebrow">KEEP YOUR EXPERIMENT</span>
+          <h2>Save it. Open it. Keep exploring.</h2>
           <p>
-            AI can make an object look convincing. Making that object move asks
-            a different set of questions: where are its pivots, how do the parts
-            connect, and what should each control actually do?
+            Save locally with its model, or export a motion recipe to use with
+            the same asset.
           </p>
-          <p>
-            IRIS grows out of Yilan Zhang’s experiments with Tripo-generated 3D
-            assets and interactive camera rigging. This browser edition makes
-            that exploration visible through local-axis motion, nine articulated
-            iris blades and a reusable part hierarchy.
-          </p>
-          <a
-            href="https://github.com/yilan-zhang/iris-camera-lab#how-it-works"
-            target="_blank"
-            rel="noopener"
-            >Explore the implementation ↗</a
-          >
         </div>
+        <div class="project-actions">
+          <input
+            id="project-name"
+            aria-label="Project name"
+            maxlength="80"
+            value="My camera exploration"
+          /><button id="save-project" class="dark">Save project</button
+          ><button id="export-config">Export recipe ↓</button
+          ><button id="import-config">Import recipe ↑</button>
+        </div>
+      </section>
+      <section class="saved-section">
+        <h3>Saved on this browser</h3>
+        <div id="saved-projects">No saved projects yet.</div>
+      </section>
+      <section class="about">
+        <h2>From generated form<br />to meaningful motion.</h2>
+        <p>
+          IRIS began with a question from a Tripo camera experiment: what makes
+          a convincing 3D shape actually usable? This workbench brings that
+          question to multiple objects. Explore a hybrid camera, a procedural
+          bicycle and a robotic gripper—or bring your own segmented model and
+          define how it moves.<br /><br />This is a kinematic editor, not a
+          physics simulator. It does not automatically segment meshes or infer
+          joints. Built by Yilan Zhang with AI-assisted development.
+        </p>
       </section>
     </main>
     <footer>
-      <span>IRIS CAMERA LAB</span
-      ><span
-        >A personal exploration by Yilan Zhang · Built with AI assistance</span
-      ><span>LOOK CLOSER. STAY CURIOUS.</span>
+      <span>IRIS / MOTION STUDIO</span
+      ><span>THREE OBJECTS. YOUR NEXT IDEA.</span>
     </footer>
+    <input type="file" id="model-file" accept=".glb" hidden /><input
+      type="file"
+      id="config-file"
+      accept=".json,application/json"
+      hidden
+    />
     <div id="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="/src/main.js"></script>
+    <script type="module" src="/src/studio.js"></script>
   </body>
 </html>

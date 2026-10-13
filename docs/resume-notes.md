@@ -1,12 +1,8 @@
-# Resume material
+# Resume material — Motion Studio
 
-Use the project as a **Personal Project**, not a hackathon entry. Describe technologies and features that are actually present. Publication is not evidence of users, measured impact or independently handwritten code.
+**IRIS — Interactive 3D Asset & Motion Studio** · Personal Project
 
-Suggested compact copy, for Yilan to review against her own contribution and understanding:
+- Developed a browser-based 3D motion editor through AI-assisted development, extending a Tripo camera exploration into a reusable workflow for importing GLB assets, inspecting scene hierarchies, and defining local-axis rotation, translation and pivot constraints.
+- Implemented three articulated examples, component picking, configurable motion controls, IndexedDB project persistence and model-bound JSON recipes using Three.js; tested transform stability, import validation and save/restore workflows, and deployed on GitHub Pages.
 
-**IRIS — Interactive 3D Camera Lab** · Personal Project
-
-- Developed an interactive camera exploration tool through AI-assisted development, extending a Tripo-based 3D asset with articulated zoom/focus controls, three translating lens groups and a nine-blade iris.
-- Built a Three.js interface with component selection, X-ray and exploded views, shareable configurations and image export; validated motion/reset behavior, URL state and desktop/mobile interactions.
-
-The earlier camera work predates this repository. The new browser edition was developed in October 2026 with Codex assistance; do not backdate this edition or claim independent full-stack development. There is no backend or live Tripo API integration.
+Review wording against Yilan’s own contribution and technical understanding. The camera exploration predates this repository; the generic editor and procedural examples were developed in October 2026 with Codex assistance. It is a personal project, not a hackathon submission, independent full-stack implementation, physics engine or live Tripo API integration.

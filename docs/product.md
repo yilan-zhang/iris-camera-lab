@@ -1,31 +1,29 @@
-# Product brief
+# IRIS Motion Studio — product brief
 
-## User and problem
+## Problem
 
-Students, creative technologists and portfolio visitors can inspect an AI-generated 3D surface but often cannot tell which parts move or how a control relates to a mechanism. An attractive static asset hides the work involved in making it interactive.
+A generated 3D object can look convincing while lacking usable motion. Students and creative technologists need to inspect its parts, define pivots and axes, and test interactions without first building a custom viewer for every object.
 
-## Main flow
+## Core workflow
 
-1. Recognize the camera and orbit it without setup.
-2. Select a component and read a short explanation.
-3. Move its control and see the corresponding geometry change.
-4. Reveal hidden structures with X-ray or exploded inspection.
-5. Share the exact setup or save a view.
+Choose one of three assemblies or import a GLB → inspect/search parts → select a mesh or group → define rotation/translation, local axis, limits and pivot → test with sliders → save a browser-local project or export a recipe.
 
-## Acceptance criteria
+## Implemented acceptance criteria
 
-- Model loads with visible progress and clear failure state.
-- Zoom, focus and iris are independent and driven by the real asset hierarchy.
-- Reset restores original transforms after repeated interactions.
-- Shared URLs accept finite bounded values and reject unknown modes.
-- All primary operations have labeled keyboard-accessible controls.
-- Mobile layout has no horizontal overflow.
-- Readme describes real behavior, authorship and mechanical/optical limitations.
+- Three distinct assemblies with working motion: camera, bicycle and gripper.
+- Import validates a self-contained GLB and rejects external dependencies and unsupported compression.
+- A generic motion engine handles all three models and user-imported parts.
+- Offset-pivot rotation preserves the pivot; repeated updates have no cumulative drift.
+- Configuration validation is atomic; invalid recipes do not partially replace working controls.
+- Imported-model recipes are bound to a SHA-256 fingerprint.
+- IndexedDB saves imported bytes together with configurations for restoration after refresh.
+- Labeled controls, keyboard-operable sliders, and mobile layout without horizontal overflow.
+- The original camera lab remains available for its specialized coupled optics and exploded view.
 
-## Design choices
+## Design
 
-An off-white workbench and muted green controls frame the original pink-and-gold model. Orange marks active controls and observations. Technical explanations stay next to the anatomy rather than interrupting exploration. The implementation is static because the core task does not need an account, API, database or server.
+A visible asset library makes the scope clear before interaction. The workbench places structure on the left, the object in the center, and motion definition on the right. Playable motion controls sit directly below. Original asset names are preserved for technical inspection; explanatory guidance is separate from implementation details.
 
 ## Future work
 
-Asset compression, glTF import with user-defined joint mapping, an actual optical model, broader device validation and a short user study. None are claimed as implemented.
+Visual pivot dragging, hierarchy editing, mesh segmentation, imported animation playback, multiple simultaneous channels per node, collision checking, asset compression and cross-browser/device testing. These are not implemented claims.

@@ -1,79 +1,81 @@
-# IRIS · Camera Lab
+# IRIS · Motion Studio
 
-**An interactive anatomy lab for a hybrid AI-generated camera.** Turn the zoom and focus rings, move internal lens groups, close a nine-blade iris, and take the assembly apart in your browser.
+**A browser workbench for turning static 3D assets into interactive objects.** Explore three assemblies, import your own GLB, define part motion, and save a reusable experiment.
 
-IRIS explores a gap in generative 3D workflows: a convincing exterior does not automatically provide meaningful pivots, part relationships or usable interaction. It turns an existing pink-and-gold camera experiment into an inspectable, shareable web experience.
+[Open Motion Studio](https://yilan-zhang.github.io/iris-camera-lab/) · [Camera deep dive](https://yilan-zhang.github.io/iris-camera-lab/camera.html) · [Product brief](docs/product.md)
 
-[Live demo](https://yilan-zhang.github.io/iris-camera-lab/) · [Product brief](docs/product.md)
+![IRIS Motion Studio](docs/preview.png)
 
-![IRIS Camera Lab desktop interface](docs/preview.png)
+## What you can do
 
-## Explore
+- **Choose an asset:** a pink-and-gold hybrid camera, procedural city bicycle, or procedural parallel gripper. These are three different articulated assemblies, not cosmetic variants.
+- **Bring your own model:** import a self-contained, uncompressed GLB up to 40 MB. Files are parsed locally and are not uploaded.
+- **Inspect structure:** search the scene hierarchy or click a mesh. Selected components have bounds and local-axis guides. Groups retain their existing parent-child relationships.
+- **Define motion:** choose rotation or translation; set a local axis, numeric limits and rotation pivot. Edit or remove controls, including built-in motions.
+- **Test:** move individual sliders or animate all channels. Reset returns each channel to zero when its range includes zero, otherwise the closest permitted endpoint.
+- **Inspect appearance:** solid, X-ray and wireframe modes; orbit, fit the view, or export a PNG.
+- **Save projects:** IndexedDB stores motion settings and, for an imported asset, the GLB itself. Reload the page and reopen the saved project without reselecting the file.
+- **Exchange recipes:** export/import validated JSON configurations. A model fingerprint prevents applying a recipe to the wrong asset.
+- **Explore optics:** the separate camera page preserves coupled lens motion, a nine-blade iris, exploded views, presets, illustrative optics and shareable URLs.
 
-- **Articulated controls:** a 55° zoom ring, 80° focus ring, three translating lens groups and nine individually pivoted iris blades.
-- **Anatomy selection:** click the model or use keyboard-accessible component buttons to highlight and learn about parts.
-- **Inspection tools:** solid, transparent-shell X-ray and wireframe modes; exploded assembly; four camera viewpoints.
-- **Guided motion:** an animated zoom → focus → aperture sequence, with manual override.
-- **Reproducible setups:** bounded URL-fragment parameters restore the same controls and view. No account or backend required.
-- **Export:** PNG view captures and the original GLB asset.
-- **Responsive interface:** desktop workspace and stacked mobile controls.
-- **Illustrative optics:** field of view for an idealized 36 mm-wide sensor and relative light from the displayed aperture ratio.
-
-## Run locally
-
-Node.js 22 or later recommended.
+## Quick start
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Open the printed local URL. The 14.6 MB model is served locally; no model-generation API key is needed.
+Node.js 22+ recommended. Open the printed local URL.
+
+Try **City bicycle → search “Steering” → choose the group → change its rotation range → Apply motion**. Move the corresponding slider, name the project, and save. For a new GLB, select a mesh/group and add a motion using the same workflow.
 
 ```sh
 npm test
+npm run test:e2e
 npm run build
 npm run preview
 ```
 
-`npm run test:e2e` runs browser interaction checks against the local dev server. Set `CHROME_PATH` if Google Chrome is not installed at the macOS default path, or install Playwright Chromium. Set `TEST_URL` to test a production preview.
+Browser checks use installed macOS Chrome by default. Set `CHROME_PATH` for another installed Chromium executable. The dev server should be running on port 4318, or set `TEST_URL`. The build includes both `index.html` and `camera.html`.
 
 ## How it works
 
-The GLB carries named transform nodes (`DOF_zoom__r`, `DOF_focus__r`, `DOF_g1__t` …). Each joint uses local **+Y** as its rotation/translation axis. The rest quaternion maps that axis to the scene’s **+X optical axis**. Rotation post-multiplies the rest quaternion; translation adds displacement along the transformed axis. Every update starts from stored rest transforms, so animations and exploded views do not accumulate drift.
+**Stack:** Three.js, JavaScript ES modules, HTML/CSS, Vite, IndexedDB, Node test runner and Playwright. Static deployment on GitHub Pages; no application server, runtime AI API or account system.
 
-Zoom couples two lens groups to 6 mm and 10 mm travel. Focus drives the third group through −5 mm travel. Nine blade pivots rotate through 65°. The exploded view moves top-level assemblies along the optical axis, preserving the iris’s internal layout. Existing embedded animation clips are not played concurrently with the procedural rig.
+The motion engine indexes the imported scene deterministically and retains every node’s rest position and quaternion. A channel targets one or more nodes, specifies a local axis and bounded range, and applies its transform from rest on every frame. Rotation around an offset pivot uses a compensating translation so the pivot stays fixed. Translation follows the rest quaternion’s transformed local axis. Repeated updates therefore do not accumulate drift.
 
-| File                       | Responsibility                                                               |
-| -------------------------- | ---------------------------------------------------------------------------- |
-| `src/rig.js`               | Asset contract, rest transforms, articulation, exploded view, material modes |
-| `src/state.js`             | Validated state, share-link serialization, presets, illustrative metrics     |
-| `src/main.js`              | Three.js scene, interaction, selection, loading, exports, animation          |
-| `src/style.css`            | Responsive visual system and accessible focus states                         |
-| `public/models/camera.glb` | Original hybrid camera asset                                                 |
-| `tests/`                   | URL bounds, metrics, actual asset hierarchy and browser behavior             |
+Existing parent-child relationships propagate motion through groups. The bicycle’s front wheel can spin while its parent steering assembly turns. The gripper’s left/right local axes face opposite directions, producing outward finger travel. This is kinematic scene-graph control, not inverse kinematics or a physics engine.
 
-**Stack:** Three.js, JavaScript ES modules, HTML/CSS, Vite, Node test runner and Playwright. Static deployment; no database, authentication, paid service or runtime AI API.
+| Module                                      | Responsibility                                                                  |
+| ------------------------------------------- | ------------------------------------------------------------------------------- |
+| `src/studio.js`                             | Asset switching, viewer, editor, picking, imports, project lifecycle            |
+| `src/motion.js`                             | Scene indexing, validated motion recipes, pivot transforms, GLB preflight       |
+| `src/assets.js`                             | Original procedural bicycle/gripper geometry and motion definitions             |
+| `src/storage.js`                            | IndexedDB project transactions                                                  |
+| `src/rig.js`, `src/main.js`, `src/state.js` | Specialized camera lab and its optical illustrations                            |
+| `tests/`                                    | Transform invariants, invalid input handling, persistence and browser workflows |
+
+Built-in recipes use stable asset identifiers. Imported models use SHA-256 of the GLB bytes. Recipes are data only; imported labels render as text. GLBs with external resource URLs are rejected to keep model loading self-contained. Compressed Draco/Meshopt/KTX2 assets need an uncompressed export for this version.
+
+## Scope and limitations
+
+- Motion requires existing separate meshes or groups. IRIS does **not** automatically segment a single mesh, infer joints, create skin weights, or change the model hierarchy.
+- Numeric pivots are in the original model’s local units. Rendering normalizes each asset for viewing without changing those authored units.
+- Each node has at most one motion channel. A channel can target several nodes, as with the camera iris or bicycle wheels. The editor preserves grouped targets when editing an existing channel.
+- Existing animation clips are not played; procedural channels drive the pose. Skinning and unusual material extensions have not been exhaustively tested.
+- There is no collision detection, dynamic simulation, physical optics or calibrated depth of field. Exploded views and optical readouts belong to the camera-specific page.
+- Saved projects stay in this browser and origin. Clearing site data removes them; there is no cloud backup or cross-device synchronization. Export recipes separately and retain original model files.
+- WebGL is required. Large models can be slow on low-powered devices. Tested in desktop Chrome and a mobile-sized Chrome viewport, not a physical phone.
+- Google Fonts may be fetched for typography; imported model bytes are not sent to a service. No analytics or account system.
 
 ## Origin and authorship
 
-Project direction and the original camera exploration are by **Yilan Zhang (Winnie)**. Her prior workflow used Tripo for generated appearance and AI-assisted coding/rigging to make the camera interactive. This browser edition extends the existing articulated asset with a new interface, inspection workflow, shareable state, documentation and tests. Implementation and testing were developed with **Codex assistance**. It is a personal project, not a hackathon entry, and it does not claim independently handwritten implementation.
+Project direction and the original Tripo camera exploration are by **Yilan Zhang (Winnie)**. The camera combines generated appearance with an articulated mechanical core from her earlier exploration. The bicycle and gripper are procedural demonstration assets created for this edition, not prior personal experiences or externally sourced research assets.
 
-The original personal asset and viewer logic were approved by Yilan for public release. This repository contains only the selected camera asset and the new standalone application; no company datasets or infrastructure are included. See [asset provenance](docs/asset-provenance.md).
+The standalone web applications, generic motion editor, procedural examples, tests and documentation were developed with **Codex assistance**. This is a personal project, not a hackathon entry. See [asset provenance](docs/asset-provenance.md) and [validation notes](docs/validation.md).
 
-## Limitations
+## Deployment and license
 
-- This is a **mechanical visualization**, not a calibrated camera or optical ray tracer. Ring-to-lens relationships are illustrative.
-- The displayed focal length is a 24–70 mm mapping of the zoom control. The aperture ratio follows the iris geometry, not a calibrated entrance pupil. Relative light holds shutter speed and ISO constant and ignores transmission losses.
-- Focus moves a lens group; it does not render photographically accurate depth of field or focus distance.
-- Exploded positions are for inspection, not a manufacturing assembly plan. Transparent surfaces can exhibit normal real-time transparency artifacts.
-- The original 14.6 MB asset may take several seconds to load. WebGL is required. Google Fonts is optional and falls back to system fonts.
-- No user accounts or analytics. Shared links contain only numeric settings, rendering mode and named viewpoint.
+`npm run build` emits a static `dist/` with relative asset paths. GitHub Actions runs the unit tests and deploys to GitHub Pages. A Vercel configuration is included but Vercel deployment is not claimed.
 
-## Deploy
-
-The Vite build emits `dist/` with relative asset paths. It can be served on GitHub Pages or any static host. A Vercel static configuration and GitHub Pages workflow are included. Deployment status should be verified separately from a successful local build.
-
-## License
-
-Application source is MIT licensed. The camera model is retained as a demonstration asset with separate terms; see [asset provenance](docs/asset-provenance.md). Tripo and third-party product names are descriptive, without endorsement or affiliation.
+Application source and procedural models are MIT licensed. The original GLB has separate terms described in [asset provenance](docs/asset-provenance.md).
